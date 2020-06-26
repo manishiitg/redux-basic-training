@@ -7,82 +7,58 @@ import { createStore } from 'redux'
 
 // our application state
 // this is a very simple counter application
-let init_state = 0
+// an array of todo
+let init_state = []
 
 
-// our actions
-// a) to increment counter
-// b) to decrement counter
-// type can be anything. generally "type" is used as default but it can any key you want.
-let increment_action = {
-  "type" : "increment"
-}
-let decrement_action = {
-  "type" : "decrement"
-}
+//let's create an action to add todo
+//// let add_todo_action = {
+//   "type" : "add_todo_action",
+//   "todo" : {}
+// }
+// now since our actions have data as well, we can use functions
+// these are called action creators
+const ADD_TODO = "add_todo"
 
-
-// our reducer
-const do_increment = (state) => {
-  return state + 1
-}
-
-const do_decrement = (state) => {
-  return state - 1
-}
-
-
-//store to bring it all together
-
-function counter_store(state = init_state, action) {
-  switch (action.type) {
-    case 'increment':
-      return do_increment(state)
-    case 'decrement':
-      return do_decrement(state)
-    default:
-      return state
-  }
-}
-
-
-// now we actuall use redux api's
-let store = createStore(counter_store)
-
-store.subscribe( () => {
-  // subscribe to any changes in state
-  console.log("change happend in state")
-  console.log(store.getState())
-})
-
-store.dispatch(increment_action)  //1
-
-store.dispatch(decrement_action) // 0
-
-store.dispatch(increment_action) // 1
-
-store.dispatch(increment_action) // 2
-
-
-
-let input = {
-  "count" : 1
-}
-
-function dummyReducer(input){
+function addTodoAction(text, completed, duedate) {
   return {
-    ...input,
-    "count" : input.count + 1
+    type: ADD_TODO,
+    text,
+    completed,
+    duedate
   }
 }
 
-console.log(dummyReducer(input))
+// lets create store directly
+let todo_store = (state = init_state, action) => {
+  if (action.type == ADD_TODO) {
+    return [
+      ...state,
+      {
+        "text": action.text,
+        "completed": action.completed,
+        "duedate": action.duedate
+      }
+    ]
+  }
+  return state
+}
+
+const store = createStore(todo_store)
 
 
+// Every time the state changes, log it
+// Note that subscribe() returns a function for unregistering the listener
+const unsubscribe = store.subscribe(() => console.log(store.getState()))
 
 
+store.dispatch( addTodoAction("todo 1", false, new Date()) )
+store.dispatch( addTodoAction("todo 2", true, new Date()) )
+store.dispatch( addTodoAction("todo 3", false, new Date()) )
 
 
+// Stop listening to state updates
+unsubscribe()
 
 
 
@@ -91,7 +67,7 @@ console.log(dummyReducer(input))
 function App() {
   return (
     <div className="App">
-      
+
     </div>
   );
 }
