@@ -1,11 +1,13 @@
 //redux/store.js
 
-import { createStore } from 'redux'
+import { createStore, combineReducers } from 'redux'
 
-import todoReducer from "./reducers/todo"
-// our application state
-// this is a very simple counter application
-// an array of todo
-let init_state = []
+import todo from "./reducers/todo"
+import login from "./reducers/login"
 
-export default createStore(todoReducer, init_state)
+const reducer = combineReducers({
+    todo,
+    login
+})
+
+export default createStore(reducer)
