@@ -3,48 +3,9 @@ import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
 
-import { createStore } from 'redux'
+import store from "./redux/store"
 
-// our application state
-// this is a very simple counter application
-// an array of todo
-let init_state = []
-
-
-//let's create an action to add todo
-//// let add_todo_action = {
-//   "type" : "add_todo_action",
-//   "todo" : {}
-// }
-// now since our actions have data as well, we can use functions
-// these are called action creators
-const ADD_TODO = "add_todo"
-
-function addTodoAction(text, completed, duedate) {
-  return {
-    type: ADD_TODO,
-    text,
-    completed,
-    duedate
-  }
-}
-
-// lets create store directly
-let todo_store = (state = init_state, action) => {
-  if (action.type == ADD_TODO) {
-    return [
-      ...state,
-      {
-        "text": action.text,
-        "completed": action.completed,
-        "duedate": action.duedate
-      }
-    ]
-  }
-  return state
-}
-
-const store = createStore(todo_store)
+import { addTodoAction, deleteTodoAction, markTodoAction, updateTodoAction } from "./redux/actions/todo"
 
 
 // Every time the state changes, log it
@@ -52,10 +13,19 @@ const store = createStore(todo_store)
 const unsubscribe = store.subscribe(() => console.log(store.getState()))
 
 
-store.dispatch( addTodoAction("todo 1", false, new Date()) )
-store.dispatch( addTodoAction("todo 2", true, new Date()) )
-store.dispatch( addTodoAction("todo 3", false, new Date()) )
+store.dispatch(addTodoAction("todo 1", false, new Date()))
+store.dispatch(addTodoAction("todo 2", true, new Date()))
+store.dispatch(addTodoAction("todo 3", false, new Date()))
 
+
+store.dispatch(deleteTodoAction(2))
+
+store.dispatch(addTodoAction("todo 4", false, new Date()))
+
+store.dispatch(markTodoAction(1))
+
+
+store.dispatch(updateTodoAction(1, "updated todo"))
 
 // Stop listening to state updates
 unsubscribe()
