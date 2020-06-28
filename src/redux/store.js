@@ -27,7 +27,8 @@ function logger({ getState }) {
 
 function allowOnlyLogin({ getState }) {
     return next => action => {
-
+        
+        console.log(action.type)
         if (action.type.toLowerCase().indexOf("todo") != -1) {
             console.log("todo action found")
             let state = getState()
@@ -41,12 +42,12 @@ function allowOnlyLogin({ getState }) {
             }else{
                 console.log("only logged in users allowed")
             }
-        } else {
-            console.log("non  todo action found")
-            return next(action)
-        }
+        } 
+        console.log("non  todo action found")
+        return next(action)
+        
 
     }
 }
 
-export default createStore(reducer, {}, applyMiddleware(logger, allowOnlyLogin))
+export default createStore(reducer, {}, applyMiddleware(allowOnlyLogin))
